@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html ng-app="tasklist">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="lib/css/css.css">
+	<title>To-Do List</title>
+</head>
+<body ng-controller="lista">
+	<header class="navbar navbar-dark bg-primary">
+		<nav class="navbar navbar-default navbar-fixed-top">
+		    <div class="container">
+		        <div class="navbar-header">
+		        	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+		          		<span class="sr-only">Toggle navigation</span>
+		          		<span class="icon-bar"></span>
+		          		<span class="icon-bar"></span>
+		          		<span class="icon-bar"></span>
+		        	</button>
+		        	<a class="navbar-brand">{{app}}</a>
+		        </div>
+		        <div id="navbar" class="collapse navbar-collapse">
+		        	<ul class="nav navbar-nav">
+		            	<li><a id="showAva">Tasks</a></li>
+		            	<li><a id="showImp">Important</a></li>
+		            	<li><a id="showCon">Concluded</a></li>		            
+		        	</ul>
+		        </div>
+		    </div>
+    	</nav>
+	</header>
+	<section class="container">
+
+		
+		<div id="available" class="jumbotron">
+			<h2 class="text-left"><span class="glyphicon glyphicon-pushpin steelblue" aria-hidden="true"></span> Available Tasks</h2>
+			<p class="text-justify">Here are all the tasks that are available. To create a new task, click the round blue button. You can mark them as <a id="goImp">important</a>, by clicking on the star in the header of the panel to the right of the title. You can <a id="goCon">complete</a> a task by clicking the green button ' ok ' or even erase it by clicking on the red dumpster.</p>
+			<hr>
+			<div ng-repeat="task in objectsTasks" class="panel panel-info">
+				<div class="panel-heading">
+					<b>{{task.title}}</b>
+					<div class="btn-group pull-right" role="group" aria-label="...">
+						<a title="Important"><span class="glyphicon glyphicon-star" aria-hidden="true" ng-click="important(task)"></span></a>
+						<a title="Conclude" id="concluida"><span class="glyphicon glyphicon-ok" aria-hidden="true" ng-click="conclude(task)"></span></a>
+						<a title="Remove" id="excluir"><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="delete(task)"></span></a>
+					</div>
+				</div>
+				<div class="panel-body">
+					<fieldset class="form-group">
+						<b>Description: </b>
+						<br>
+							{{task.description}}
+					</fieldset>
+					<hr>
+					<fieldset class="form-group">
+						<b>Date Time: </b>
+						<br>
+							{{task.datetime}}
+					</fieldset>
+				</div>
+			</div>
+			<br>
+			<button id="btnAdd" class="btn btn-primary center-block" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+			<br>
+
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+				  	<div class="modal-content">
+				    	<div class="modal-header">
+					      	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					      	<h4 class="modal-title" id="myModalLabel">New task</h4>
+				    	</div>
+				    	<div class="modal-body">
+							<div class="form-group">
+								<label for="exampleTextarea">Title</label>
+								<input type="text" class="form-control" placeholder="Nome da task" aria-describedby="basic-addon1" ng-model="task.title">
+								<label for="exampleTextarea">Description</label>
+								<textarea class="form-control" id="exampleTextarea" rows="3" ng-model="task.description"></textarea>
+								<label for="example-date-input" class="col-2 col-form-label">Date Time</label>
+								<div class="col-10">
+									<input class="form-control" type="datetime-local" ng-model="task.datetime">
+								</div>
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="addImportant"> <b>Mark as Important</b>
+									</label>
+								</div>
+							</div>
+				    	</div>
+				    	<div class="modal-footer">
+					      	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					     	<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="adicionarTask(task)">Add</button>
+				    	</div>
+				  	</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="important" class="jumbotron hidden">
+			<h2 class="text-left"><span class="glyphicon glyphicon-star amarelo" aria-hidden="true"></span> Important Tasks</h2>
+			<p class="text-justify">Here are all the tasks that you marked as important. You can unmark a task as important by clicking the star again, it will return to the available tasks.</p>
+			<hr>
+			<div ng-repeat="important in importantTasks" class="panel panel-warning">
+				<div class="panel-heading">
+					<b>{{important.title}}</b>
+					<div class="btn-group pull-right" role="group" aria-label="...">
+						<a title="Important"><span class="glyphicon glyphicon-star amarelo" aria-hidden="true" ng-click="notImportant(important)"></span></a>
+						<a title="Conclude" id="concluida"><span class="glyphicon glyphicon-ok" aria-hidden="true" ng-click="importantConclude(important)"></span></a>
+						<a title="Remove" id="excluir"><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="importantDelete(important)"></span></a>
+					</div>
+				</div>
+				<div class="panel-body">
+					<fieldset class="form-group">
+						<b>Description: </b>
+						<br>
+							{{important.description}}
+					</fieldset>
+					<hr>
+					<fieldset class="form-group">
+						<b>Date Time: </b>
+						<br>
+							{{important.datetime}}
+					</fieldset>
+				</div>
+			</div>
+		</div>
+
+		<div id="concluded" class="jumbotron hidden">
+			<h2 class="text-left"><span class="glyphicon glyphicon-ok verde" aria-hidden="true"></span> Concluded Tasks</h2>
+			<p class="text-justify">Here are all the tasks that you have marked as completed. Once a task is marked as completed, it is unable to receive any other amendment, is to mark the message as important or deletes it.</p>
+			<hr>
+			<div ng-repeat="concluded in concludedTasks" class="panel panel-success">
+				<div class="panel-heading">
+					<b>{{concluded.title}}</b>
+				</div>
+				<div class="panel-body">
+					<fieldset class="form-group">
+						<b>Description: </b>
+						<br>
+							{{concluded.description}}
+					</fieldset>
+					<hr>
+					<fieldset class="form-group">
+						<b>Date Time: </b>
+						<br>
+							{{concluded.datetime}}
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		
+	</section>
+
+	<footer class="footer">
+		<div class="container">
+        	<p class="text-muted">Gleyser Thadeu da Fonseca Santos</p>
+        </div>
+	</footer>
+	
+	<script type="text/javascript" src="lib/angular/angular.js"></script>
+	<script type="text/javascript" src="lib/angular/module.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.5.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="lib/bootstrap/bootstrap.min.js"></script>
+</body>
+</html>
